@@ -38,6 +38,7 @@ type CustomerGetAllQueryParams struct {
 	VATRegistrationID string `schema:"vatRegistrationId,omitempty"`
 	Email             string `schema:"email,omitempty"`
 	Phone             string `schema:"phone,omitempty"`
+	Status            string `schema:"status,omitempty"`
 }
 
 func (p CustomerGetAllQueryParams) ToURLValues() (url.Values, error) {

@@ -33,7 +33,9 @@ func (r CustomerGetByCD) NewQueryParams() *CustomerGetByCDQueryParams {
 	return &CustomerGetByCDQueryParams{}
 }
 
-type CustomerGetByCDQueryParams struct{}
+type CustomerGetByCDQueryParams struct {
+	Status string `schema:"status,omitempty"`
+}
 
 func (p CustomerGetByCDQueryParams) ToURLValues() (url.Values, error) {
 	encoder := utils.NewSchemaEncoder()
