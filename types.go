@@ -209,35 +209,43 @@ func (v ValueTime) IsEmpty() bool {
 	return zero.IsZero(v)
 }
 
-// func (v *ValueTime) UnmarshalJSON(data []byte) error {
-// 	var value string
-// 	err := json.Unmarshal(data, &value)
-// 	if err != nil {
-// 		return err
-// 	}
+func (v *ValueTime) UnmarshalJSON(data []byte) error {
+	var value string
+	err := json.Unmarshal(data, &value)
+	if err != nil {
+		return err
+	}
 
-// 	if value == "" {
-// 		return nil
-// 	}
+	if value == "" {
+		return nil
+	}
 
-// 	// first try standard date
-// 	t, err := time.Parse(time.RFC3339, value)
-// 	if err == nil {
-// 		vt := ValueTime(Time{t})
-// 		*v = vt
-// 		return nil
-// 	}
+	// first try standard date
+	t, err := time.Parse(time.RFC3339, value)
+	if err == nil {
+		vt := ValueTime(Time{t})
+		*v = vt
+		return nil
+	}
 
-// 	// try untill date format
-// 	t, err = time.Parse("2006-01-02T15:04:05-07:00", value)
-// 	if err == nil {
-// 		vt := ValueTime(t)
-// 		*v = vt
-// 		return nil
-// 	}
+	// they use two different time formats
+	t, err = time.Parse("2006-01-02T15:04:05", value)
+	if err == nil {
+		vt := ValueTime(Time{t})
+		*v = vt
+		return nil
+	}
 
-// 	return err
-// }
+	// try untill date format
+	t, err = time.Parse("2006-01-02T15:04:05-07:00", value)
+	if err == nil {
+		vt := ValueTime(Time{t})
+		*v = vt
+		return nil
+	}
+
+	return err
+}
 
 type ValueInt int
 
@@ -308,7 +316,7 @@ func (t *Time) UnmarshalJSON(text []byte) (err error) {
 
 	// try untill date format
 	t.Time, err = time.Parse("2006-01-02T15:04:05-07:00", value)
-	return
+	return err
 }
 
 type SalesOrderTypes []SalesOrderType
@@ -326,6 +334,8 @@ type SalesOrderType struct {
 	} `json:"metadata"`
 }
 
+type Invoices []Invoice
+
 type Invoice struct {
 	PaymentMethodID                    ValueString    `json:"paymentMethodId,omitempty"`
 	CreditTermsID                      ValueString    `json:"creditTermsId,omitempty"`
@@ -335,12 +345,12 @@ type Invoice struct {
 	DocumentDueDate                    ValueTime      `json:"documentDueDate"`
 	ExternalReference                  ValueString    `json:"externalReference"`
 	CustomerProject                    ValueString    `json:"customerProject,omitempty"`
-	ExchangeRate                       ValueInt       `json:"exchangeRate,omitempty"`
+	ExchangeRate                       ValueNumber    `json:"exchangeRate,omitempty"`
 	DomesticServicesDeductibleDocument ValueBool      `json:"domesticServicesDeductibleDocument,omitempty"`
 	RotRutDetails                      RotRutDetails  `json:"rotRutDetails,omitempty"`
 	PaymentReference                   ValueString    `json:"paymentReference,omitempty"`
 	Contact                            ValueInt       `json:"contact,omitempty"`
-	Project                            ValueString    `json:"project,omitempty"`
+	Project                            Project        `json:"project,omitempty"`
 	TaxDetailLines                     TaxDetailLines `json:"taxDetailLines,omitempty"`
 	InvoiceLines                       InvoiceLines   `json:"invoiceLines"`
 	SendToAutoInvoice                  ValueBool      `json:"sendToAutoInvoice"`
@@ -365,7 +375,7 @@ type Invoice struct {
 	SalesPersonID                      ValueString    `json:"salesPersonID,omitempty"`
 	Salesperson                        ValueString    `json:"salesperson,omitempty"`
 	Note                               ValueString    `json:"note"`
-	BranchNumber                       ValueString    `json:"branchNumber,omitempty"`
+	BranchNumber                       Branch         `json:"branchNumber,omitempty"`
 	CashAccount                        ValueString    `json:"cashAccount,omitempty"`
 	DontPrint                          ValueBool      `json:"dontPrint"`
 	DontEmail                          ValueBool      `json:"dontEmail"`
@@ -425,7 +435,7 @@ type InvoiceLine struct {
 	InventoryNumber            ValueString     `json:"inventoryNumber,omitempty"`
 	LineNumber                 ValueInt        `json:"lineNumber"`
 	Description                ValueString     `json:"description"`
-	Quantity                   ValueInt        `json:"quantity"`
+	Quantity                   ValueNumber     `json:"quantity"`
 	UnitPriceInCurrency        ValueNumber     `json:"unitPriceInCurrency"`
 	ManualAmountInCurrency     ValueNumber     `json:"manualAmountInCurrency"`
 	AccountNumber              ValueString     `json:"accountNumber"`
@@ -434,7 +444,7 @@ type InvoiceLine struct {
 	DiscountPercent            ValueNumber     `json:"discountPercent,omitempty"`
 	DiscountAmountInCurrency   ValueNumber     `json:"discountAmountInCurrency,omitempty"`
 	ManualDiscount             ValueBool       `json:"manualDiscount,omitempty"`
-	Subaccount                 []struct {
+	Subaccount                 struct {
 		SegmentID    int    `json:"segmentId"`
 		SegmentValue string `json:"segmentValue"`
 	} `json:"subaccount,omitempty"`
@@ -444,7 +454,7 @@ type InvoiceLine struct {
 	TermStartDate    ValueTime   `json:"termStartDate,omitempty"`
 	TermEndDate      ValueTime   `json:"termEndDate,omitempty"`
 	Note             ValueString `json:"note"`
-	BranchNumber     ValueString `json:"branchNumber,omitempty"`
+	BranchNumber     Branch      `json:"branchNumber,omitempty"`
 }
 
 func (i InvoiceLine) MarshalJSON() ([]byte, error) {
@@ -478,6 +488,7 @@ func (ll TaxDetailLines) IsEmpty() bool {
 
 type TaxDetailLine struct {
 	TaxID         ValueString `json:"taxId"`
+	VatRate       ValueNumber `json:"vatRate"`
 	TaxableAmount ValueNumber `json:"taxableAmount"`
 	VatAmount     ValueNumber `json:"vatAmount"`
 }
@@ -924,4 +935,152 @@ type FinancialPeriod struct {
 	ClosedInGeneralLedger       bool   `json:"closedInGeneralLedger"`
 	ClosedInCashManagement      bool   `json:"closedInCashManagement"`
 	ClosedInFixedAssets         bool   `json:"closedInFixedAssets"`
+}
+
+type Project struct {
+	ID          string `json:"id"`
+	Description string `json:"description"`
+}
+
+type CreditNotes []CreditNote
+
+type CreditNote struct {
+	ExchangeRate    ValueNumber     `json:"exchangeRate"`
+	Attachments     []interface{}   `json:"attachments"`
+	TaxDetails      TaxDetailLines  `json:"taxDetails"`
+	Lines           CreditNoteLines `json:"lines"`
+	RoundingDiff    float64         `json:"roundingDiff"`
+	CustomerVatZone struct {
+		ID          string `json:"id"`
+		Description string `json:"description"`
+	} `json:"customerVatZone"`
+	SendToAutoInvoice         bool    `json:"sendToAutoInvoice"`
+	Hold                      bool    `json:"hold"`
+	DiscountTotal             float64 `json:"discountTotal"`
+	DiscountTotalInCurrency   float64 `json:"discountTotalInCurrency"`
+	DetailTotal               float64 `json:"detailTotal"`
+	DetailTotalInCurrency     float64 `json:"detailTotalInCurrency"`
+	VatTaxableTotal           float64 `json:"vatTaxableTotal"`
+	VatTaxableTotalInCurrency float64 `json:"vatTaxableTotalInCurrency"`
+	VatExemptTotal            float64 `json:"vatExemptTotal"`
+	VatExemptTotalInCurrency  float64 `json:"vatExemptTotalInCurrency"`
+	PaymentReference          string  `json:"paymentReference"`
+	DontPrint                 bool    `json:"dontPrint"`
+	DontEmail                 bool    `json:"dontEmail"`
+	Customer                  struct {
+		Number string `json:"number"`
+		Name   string `json:"name"`
+	} `json:"customer"`
+	DocumentType           string  `json:"documentType"`
+	ReferenceNumber        string  `json:"referenceNumber"`
+	PostPeriod             string  `json:"postPeriod"`
+	FinancialPeriod        string  `json:"financialPeriod"`
+	ClosedFinancialPeriod  string  `json:"closedFinancialPeriod,omitempty"`
+	DocumentDate           string  `json:"documentDate"`
+	Status                 string  `json:"status"`
+	CurrencyID             string  `json:"currencyId"`
+	Amount                 float64 `json:"amount"`
+	AmountInCurrency       float64 `json:"amountInCurrency"`
+	Balance                float64 `json:"balance"`
+	BalanceInCurrency      float64 `json:"balanceInCurrency"`
+	CashDiscount           float64 `json:"cashDiscount"`
+	CashDiscountInCurrency float64 `json:"cashDiscountInCurrency"`
+	PaymentMethod          struct {
+		ID          string `json:"id"`
+		Description string `json:"description"`
+	} `json:"paymentMethod"`
+	InvoiceText          string  `json:"invoiceText,omitempty"`
+	LastModifiedDateTime string  `json:"lastModifiedDateTime"`
+	CreatedDateTime      string  `json:"createdDateTime"`
+	Note                 string  `json:"note"`
+	VatTotal             float64 `json:"vatTotal"`
+	VatTotalInCurrency   float64 `json:"vatTotalInCurrency"`
+	Location             struct {
+		CountryID string `json:"countryId"`
+		ID        string `json:"id"`
+		Name      string `json:"name"`
+	} `json:"location"`
+	BranchNumber struct {
+		Number string `json:"number"`
+		Name   string `json:"name"`
+	} `json:"branchNumber"`
+	CashAccount string `json:"cashAccount,omitempty"`
+	Project     struct {
+		ID          string `json:"id"`
+		Description string `json:"description"`
+	} `json:"project"`
+	Account struct {
+		Type        string `json:"type"`
+		Number      string `json:"number"`
+		Description string `json:"description"`
+	} `json:"account"`
+	Subaccount struct {
+		SubaccountNumber     string `json:"subaccountNumber"`
+		SubaccountID         int    `json:"subaccountId"`
+		Description          string `json:"description"`
+		LastModifiedDateTime string `json:"lastModifiedDateTime"`
+		Active               bool   `json:"active"`
+		Segments             []struct {
+			SegmentID               int    `json:"segmentId"`
+			SegmentDescription      string `json:"segmentDescription"`
+			SegmentValue            string `json:"segmentValue"`
+			SegmentValueDescription string `json:"segmentValueDescription"`
+		} `json:"segments"`
+	} `json:"subaccount,omitempty"`
+	Metadata struct {
+		TotalCount  int `json:"totalCount"`
+		MaxPageSize int `json:"maxPageSize"`
+	} `json:"metadata"`
+	CreditTerms struct {
+		ID          string `json:"id"`
+		Description string `json:"description"`
+	} `json:"creditTerms,omitempty"`
+	DocumentDueDate   string `json:"documentDueDate,omitempty"`
+	CashDiscountDate  string `json:"cashDiscountDate,omitempty"`
+	CustomerRefNumber string `json:"customerRefNumber,omitempty"`
+	ExternalReference string `json:"externalReference,omitempty"`
+}
+
+type CreditNoteLines []CreditNoteLine
+
+type CreditNoteLine struct {
+	LineNumber             int     `json:"lineNumber"`
+	Quantity               float64 `json:"quantity"`
+	UnitPrice              float64 `json:"unitPrice"`
+	UnitPriceInCurrency    float64 `json:"unitPriceInCurrency"`
+	ManualAmount           float64 `json:"manualAmount"`
+	ManualAmountInCurrency float64 `json:"manualAmountInCurrency"`
+	Amount                 float64 `json:"amount"`
+	Cost                   float64 `json:"cost"`
+	AmountInCurrency       float64 `json:"amountInCurrency"`
+	Account                struct {
+		Type        string `json:"type"`
+		Number      string `json:"number"`
+		Description string `json:"description"`
+	} `json:"account"`
+	VatCode struct {
+		ID          string `json:"id"`
+		Description string `json:"description"`
+	} `json:"vatCode"`
+	DiscountPercent          float64 `json:"discountPercent"`
+	DiscountAmount           float64 `json:"discountAmount"`
+	DiscountAmountInCurrency float64 `json:"discountAmountInCurrency"`
+	ManualDiscount           bool    `json:"manualDiscount"`
+	Subaccount               struct {
+		SubaccountNumber     string `json:"subaccountNumber"`
+		SubaccountID         int    `json:"subaccountId"`
+		LastModifiedDateTime string `json:"lastModifiedDateTime"`
+		Active               bool   `json:"active"`
+		Segments             []struct {
+			SegmentID               int    `json:"segmentId"`
+			SegmentDescription      string `json:"segmentDescription"`
+			SegmentValue            string `json:"segmentValue"`
+			SegmentValueDescription string `json:"segmentValueDescription"`
+		} `json:"segments"`
+	} `json:"subaccount"`
+	DeferralSchedule int `json:"deferralSchedule"`
+	BranchNumber     struct {
+		Number string `json:"number"`
+		Name   string `json:"name"`
+	} `json:"branchNumber"`
 }

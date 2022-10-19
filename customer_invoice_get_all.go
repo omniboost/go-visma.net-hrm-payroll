@@ -7,8 +7,8 @@ import (
 	"github.com/omniboost/go-visma.net/utils"
 )
 
-func (c *Client) NewCustomerCreditNoteGetAll() CustomerCreditNoteGetAll {
-	r := CustomerCreditNoteGetAll{
+func (c *Client) NewCustomerInvoiceGetAll() CustomerInvoiceGetAll {
+	r := CustomerInvoiceGetAll{
 		client:  c,
 		method:  http.MethodGet,
 		headers: http.Header{},
@@ -20,20 +20,20 @@ func (c *Client) NewCustomerCreditNoteGetAll() CustomerCreditNoteGetAll {
 	return r
 }
 
-type CustomerCreditNoteGetAll struct {
+type CustomerInvoiceGetAll struct {
 	client      *Client
-	queryParams *CustomerCreditNoteGetAllQueryParams
-	pathParams  *CustomerCreditNoteGetAllPathParams
+	queryParams *CustomerInvoiceGetAllQueryParams
+	pathParams  *CustomerInvoiceGetAllPathParams
 	method      string
 	headers     http.Header
-	requestBody CustomerCreditNoteGetAllBody
+	requestBody CustomerInvoiceGetAllBody
 }
 
-func (r CustomerCreditNoteGetAll) NewQueryParams() *CustomerCreditNoteGetAllQueryParams {
-	return &CustomerCreditNoteGetAllQueryParams{}
+func (r CustomerInvoiceGetAll) NewQueryParams() *CustomerInvoiceGetAllQueryParams {
+	return &CustomerInvoiceGetAllQueryParams{}
 }
 
-type CustomerCreditNoteGetAllQueryParams struct {
+type CustomerInvoiceGetAllQueryParams struct {
 	// The field is deprecated for specific customer document endpoints. It will
 	// only be usable from customer document endpoint.
 	DocumentType string `schema:"documentType,omitempty"`
@@ -133,7 +133,7 @@ type CustomerCreditNoteGetAllQueryParams struct {
 	PageSize int `schema:"pageSize,omitempty"`
 }
 
-func (p CustomerCreditNoteGetAllQueryParams) ToURLValues() (url.Values, error) {
+func (p CustomerInvoiceGetAllQueryParams) ToURLValues() (url.Values, error) {
 	encoder := utils.NewSchemaEncoder()
 	encoder.RegisterEncoder(Date{}, utils.EncodeSchemaMarshaler)
 	encoder.RegisterEncoder(DateTime{}, utils.EncodeSchemaMarshaler)
@@ -147,68 +147,68 @@ func (p CustomerCreditNoteGetAllQueryParams) ToURLValues() (url.Values, error) {
 	return params, nil
 }
 
-func (r *CustomerCreditNoteGetAll) QueryParams() *CustomerCreditNoteGetAllQueryParams {
+func (r *CustomerInvoiceGetAll) QueryParams() *CustomerInvoiceGetAllQueryParams {
 	return r.queryParams
 }
 
-func (r CustomerCreditNoteGetAll) NewPathParams() *CustomerCreditNoteGetAllPathParams {
-	return &CustomerCreditNoteGetAllPathParams{}
+func (r CustomerInvoiceGetAll) NewPathParams() *CustomerInvoiceGetAllPathParams {
+	return &CustomerInvoiceGetAllPathParams{}
 }
 
-type CustomerCreditNoteGetAllPathParams struct {
+type CustomerInvoiceGetAllPathParams struct {
 }
 
-func (p *CustomerCreditNoteGetAllPathParams) Params() map[string]string {
+func (p *CustomerInvoiceGetAllPathParams) Params() map[string]string {
 	return map[string]string{}
 }
 
-func (r *CustomerCreditNoteGetAll) PathParams() *CustomerCreditNoteGetAllPathParams {
+func (r *CustomerInvoiceGetAll) PathParams() *CustomerInvoiceGetAllPathParams {
 	return r.pathParams
 }
 
-func (r *CustomerCreditNoteGetAll) PathParamsInterface() PathParams {
+func (r *CustomerInvoiceGetAll) PathParamsInterface() PathParams {
 	return r.pathParams
 }
 
-func (r *CustomerCreditNoteGetAll) SetMethod(method string) {
+func (r *CustomerInvoiceGetAll) SetMethod(method string) {
 	r.method = method
 }
 
-func (r *CustomerCreditNoteGetAll) Method() string {
+func (r *CustomerInvoiceGetAll) Method() string {
 	return r.method
 }
 
-func (r CustomerCreditNoteGetAll) NewRequestBody() CustomerCreditNoteGetAllBody {
-	return CustomerCreditNoteGetAllBody{}
+func (r CustomerInvoiceGetAll) NewRequestBody() CustomerInvoiceGetAllBody {
+	return CustomerInvoiceGetAllBody{}
 }
 
-type CustomerCreditNoteGetAllBody struct {
+type CustomerInvoiceGetAllBody struct {
 }
 
-func (r *CustomerCreditNoteGetAll) RequestBody() *CustomerCreditNoteGetAllBody {
+func (r *CustomerInvoiceGetAll) RequestBody() *CustomerInvoiceGetAllBody {
 	return nil
 }
 
-func (r *CustomerCreditNoteGetAll) RequestBodyInterface() interface{} {
+func (r *CustomerInvoiceGetAll) RequestBodyInterface() interface{} {
 	return nil
 }
 
-func (r *CustomerCreditNoteGetAll) SetRequestBody(body CustomerCreditNoteGetAllBody) {
+func (r *CustomerInvoiceGetAll) SetRequestBody(body CustomerInvoiceGetAllBody) {
 	r.requestBody = body
 }
 
-func (r *CustomerCreditNoteGetAll) NewResponseBody() *CustomerCreditNoteGetAllResponseBody {
-	return &CustomerCreditNoteGetAllResponseBody{}
+func (r *CustomerInvoiceGetAll) NewResponseBody() *CustomerInvoiceGetAllResponseBody {
+	return &CustomerInvoiceGetAllResponseBody{}
 }
 
-type CustomerCreditNoteGetAllResponseBody CreditNotes
+type CustomerInvoiceGetAllResponseBody Invoices
 
-func (r *CustomerCreditNoteGetAll) URL() *url.URL {
-	u := r.client.GetEndpointURL("/controller/api/v1/customerCreditNote", r.PathParams())
+func (r *CustomerInvoiceGetAll) URL() *url.URL {
+	u := r.client.GetEndpointURL("/controller/api/v1/customerinvoice", r.PathParams())
 	return &u
 }
 
-func (r *CustomerCreditNoteGetAll) Do() (CustomerCreditNoteGetAllResponseBody, error) {
+func (r *CustomerInvoiceGetAll) Do() (CustomerInvoiceGetAllResponseBody, error) {
 	// Create http request
 	req, err := r.client.NewRequest(nil, r)
 	if err != nil {

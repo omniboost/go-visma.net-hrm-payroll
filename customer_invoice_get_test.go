@@ -8,7 +8,7 @@ import (
 
 func TestCustomerInvoiceGet(t *testing.T) {
 	req := client.NewCustomerInvoiceGet()
-	req.PathParams().InvoiceNumber = "04M202218279"
+	req.PathParams().InvoiceNumber = "2000144"
 	resp, err := req.Do()
 	if err != nil {
 		t.Error(err)
