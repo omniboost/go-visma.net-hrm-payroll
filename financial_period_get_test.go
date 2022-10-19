@@ -6,8 +6,8 @@ import (
 	"testing"
 )
 
-func TestSubaccountGetAll(t *testing.T) {
-	req := client.NewSubaccountGetAll()
+func TestFinancialperiodGet(t *testing.T) {
+	req := client.NewFinancialperiodGet()
 	resp, err := req.Do()
 	if err != nil {
 		t.Error(err)

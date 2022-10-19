@@ -2,7 +2,7 @@ package vismanet_test
 
 import (
 	"encoding/json"
-	"log"
+	"fmt"
 	"testing"
 )
 
@@ -14,5 +14,5 @@ func TestAccountGetAll(t *testing.T) {
 	}
 
 	b, _ := json.MarshalIndent(resp, "", "  ")
-	log.Println(string(b))
+	fmt.Println(string(b))
 }
