@@ -85,7 +85,7 @@ func (r CustomerInvoiceV2Post) NewRequestBody() CustomerInvoiceV2PostBody {
 	return CustomerInvoiceV2PostBody{}
 }
 
-type CustomerInvoiceV2PostBody Invoice
+type CustomerInvoiceV2PostBody NewInvoice
 
 func (r CustomerInvoiceV2PostBody) MarshalJSON() ([]byte, error) {
 	return omitempty.MarshalJSON(r)

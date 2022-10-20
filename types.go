@@ -381,6 +381,96 @@ type Invoice struct {
 	DontEmail                          ValueBool      `json:"dontEmail"`
 }
 
+type NewInvoice struct {
+	PaymentMethodID                    ValueString    `json:"paymentMethodId,omitempty"`
+	CreditTermsID                      ValueString    `json:"creditTermsId,omitempty"`
+	CurrencyID                         ValueString    `json:"currencyId"`
+	CustomerRefNumber                  ValueString    `json:"customerRefNumber,omitempty"`
+	CashDiscountDate                   ValueTime      `json:"cashDiscountDate,omitempty"`
+	DocumentDueDate                    ValueTime      `json:"documentDueDate"`
+	ExternalReference                  ValueString    `json:"externalReference"`
+	CustomerProject                    ValueString    `json:"customerProject,omitempty"`
+	ExchangeRate                       ValueNumber    `json:"exchangeRate,omitempty"`
+	DomesticServicesDeductibleDocument ValueBool      `json:"domesticServicesDeductibleDocument,omitempty"`
+	RotRutDetails                      RotRutDetails  `json:"rotRutDetails,omitempty"`
+	PaymentReference                   ValueString    `json:"paymentReference,omitempty"`
+	Contact                            ValueInt       `json:"contact,omitempty"`
+	Project                            ValueString    `json:"project,omitempty"`
+	TaxDetailLines                     TaxDetailLines `json:"taxDetailLines,omitempty"`
+	InvoiceLines                       InvoiceLines   `json:"invoiceLines"`
+	SendToAutoInvoice                  ValueBool      `json:"sendToAutoInvoice"`
+	CustomerVatZoneID                  ValueString    `json:"customerVatZoneId,omitempty"`
+	BillingAddress                     BillingAddress `json:"billingAddress,omitempty"`
+	InvoiceContact                     InvoiceContact `json:"invoiceContact,omitempty"`
+	StartDate                          ValueTime      `json:"startDate,omitempty"`
+	EndDate                            ValueTime      `json:"endDate,omitempty"`
+	AccountingCostRef                  ValueString    `json:"accountingCostRef,omitempty"`
+	OriginatorDocRef                   ValueString    `json:"originatorDocRef,omitempty"`
+	ContractDocRef                     ValueString    `json:"contractDocRef,omitempty"`
+	OverrideNumberSeries               ValueBool      `json:"overrideNumberSeries"`
+	ReferenceNumber                    ValueString    `json:"referenceNumber"`
+	CustomerNumber                     ValueString    `json:"customerNumber"`
+	DocumentDate                       ValueTime      `json:"documentDate"`
+	OrigInvoiceDate                    ValueTime      `json:"origInvoiceDate,omitempty"`
+	Hold                               ValueBool      `json:"hold"`
+	PostPeriod                         ValueString    `json:"postPeriod"`
+	FinancialPeriod                    ValueString    `json:"financialPeriod"`
+	InvoiceText                        ValueString    `json:"invoiceText"`
+	LocationID                         ValueString    `json:"locationId,omitempty"`
+	SalesPersonID                      ValueString    `json:"salesPersonID,omitempty"`
+	Salesperson                        ValueString    `json:"salesperson,omitempty"`
+	Note                               ValueString    `json:"note"`
+	BranchNumber                       ValueString    `json:"branchNumber,omitempty"`
+	CashAccount                        ValueString    `json:"cashAccount,omitempty"`
+	DontPrint                          ValueBool      `json:"dontPrint"`
+	DontEmail                          ValueBool      `json:"dontEmail"`
+}
+
+// type Invoice struct {
+//     PaymentMethodID                    ValueString    `json:"paymentMethodId,omitempty"`
+//     CreditTermsID                      ValueString    `json:"creditTermsId,omitempty"`
+//     CurrencyID                         ValueString    `json:"currencyId"`
+//     CustomerRefNumber                  ValueString    `json:"customerRefNumber"`
+//     CashDiscountDate                   ValueTime      `json:"cashDiscountDate,omitempty"`
+//     DocumentDueDate                    ValueTime      `json:"documentDueDate"`
+//     ExternalReference                  ValueString    `json:"externalReference"`
+//     CustomerProject                    ValueString    `json:"customerProject"`
+//     ExchangeRate                       ValueInt       `json:"exchangeRate"`
+//     DomesticServicesDeductibleDocument ValueBool      `json:"domesticServicesDeductibleDocument"`
+//     RotRutDetails                      RotRutDetails  `json:"rotRutDetails,omitempty"`
+//     PaymentReference                   ValueString    `json:"paymentReference,omitempty"`
+//     Contact                            ValueInt       `json:"contact,omitempty"`
+//     Project                            ValueString    `json:"project,omitempty"`
+//     TaxDetailLines                     TaxDetailLines `json:"taxDetailLines,omitempty"`
+//     InvoiceLines                       InvoiceLines   `json:"invoiceLines"`
+//     SendToAutoInvoice                  ValueBool      `json:"sendToAutoInvoice"`
+//     CustomerVatZoneID                  ValueString    `json:"customerVatZoneId,omitempty"`
+//     BillingAddress                     BillingAddress `json:"billingAddress,omitempty"`
+//     InvoiceContact                     InvoiceContact `json:"invoiceContact,omitempty"`
+//     StartDate                          ValueTime      `json:"startDate,omitempty"`
+//     EndDate                            ValueTime      `json:"endDate,omitempty"`
+//     AccountingCostRef                  ValueString    `json:"accountingCostRef"`
+//     OriginatorDocRef                   ValueString    `json:"originatorDocRef"`
+//     ContractDocRef                     ValueString    `json:"contractDocRef"`
+//     OverrideNumberSeries               ValueBool      `json:"overrideNumberSeries"`
+//     ReferenceNumber                    ValueString    `json:"referenceNumber"`
+//     CustomerNumber                     ValueString    `json:"customerNumber"`
+//     DocumentDate                       ValueTime      `json:"documentDate"`
+//     OrigInvoiceDate                    ValueTime      `json:"origInvoiceDate,omitempty"`
+//     Hold                               ValueBool      `json:"hold"`
+//     PostPeriod                         ValueString    `json:"postPeriod"`
+//     FinancialPeriod                    ValueString    `json:"financialPeriod"`
+//     InvoiceText                        ValueString    `json:"invoiceText"`
+//     LocationID                         ValueString    `json:"locationId,omitempty"`
+//     SalesPersonID                      ValueString    `json:"salesPersonID,omitempty"`
+//     Salesperson                        ValueString    `json:"salesperson,omitempty"`
+//     Note                               ValueString    `json:"note"`
+//     BranchNumber                       ValueString    `json:"branchNumber,omitempty"`
+//     CashAccount                        ValueString    `json:"cashAccount,omitempty"`
+//     DontPrint                          ValueBool      `json:"dontPrint"`
+//     DontEmail                          ValueBool      `json:"dontEmail"`
+// }
+
 func (i Invoice) MarshalJSON() ([]byte, error) {
 	return omitempty.MarshalJSON(i)
 }
@@ -459,6 +549,10 @@ type InvoiceLine struct {
 
 func (i InvoiceLine) MarshalJSON() ([]byte, error) {
 	return omitempty.MarshalJSON(i)
+}
+
+func (i InvoiceLine) IsEmpty() bool {
+	return zero.IsZero(i)
 }
 
 type RotRutDetails struct {
@@ -918,6 +1012,14 @@ type Branch struct {
 		ID          string `json:"id"`
 		Description string `json:"description"`
 	} `json:"ledger"`
+}
+
+func (b Branch) MarshalJSON() ([]byte, error) {
+	return omitempty.MarshalJSON(b)
+}
+
+func (b Branch) IsEmpty() bool {
+	return zero.IsZero(b)
 }
 
 type FinancialPeriods []FinancialPeriod
