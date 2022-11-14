@@ -379,6 +379,7 @@ type Invoice struct {
 	CashAccount                        ValueString    `json:"cashAccount,omitempty"`
 	DontPrint                          ValueBool      `json:"dontPrint"`
 	DontEmail                          ValueBool      `json:"dontEmail"`
+	CreatedDateTime                    string         `json:"createdDateTime"`
 }
 
 type NewInvoice struct {
