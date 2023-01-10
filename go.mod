@@ -1,4 +1,4 @@
-module github.com/omniboost/go-visma.net
+module github.com/omniboost/go-visma.net-hrm-payroll
 
 go 1.16
 

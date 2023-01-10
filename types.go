@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/cydev/zero"
-	"github.com/omniboost/go-visma.net/omitempty"
+	"github.com/omniboost/go-visma.net-hrm-payroll/omitempty"
 )
 
 type Accounts []Account
@@ -1186,4 +1186,20 @@ type CreditNoteLine struct {
 		Number string `json:"number"`
 		Name   string `json:"name"`
 	} `json:"branchNumber"`
+}
+
+type Departments []Department
+
+type Department struct {
+}
+
+type Context struct {
+}
+
+type ContextUserdetails struct {
+}
+
+type Employees []Employee
+
+type Employee struct {
 }
