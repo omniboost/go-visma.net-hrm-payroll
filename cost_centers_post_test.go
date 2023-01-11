@@ -2,17 +2,17 @@ package vismanet_test
 
 import (
 	"encoding/json"
-	"log"
+	"fmt"
 	"testing"
 )
 
-func TestVATCategoryGetAll(t *testing.T) {
-	req := client.NewVATCategoryGetAll()
+func TestCostCentersPost(t *testing.T) {
+	req := client.NewCostCentersPost()
 	resp, err := req.Do()
 	if err != nil {
 		t.Error(err)
 	}
 
 	b, _ := json.MarshalIndent(resp, "", "  ")
-	log.Println(string(b))
+	fmt.Println(string(b))
 }

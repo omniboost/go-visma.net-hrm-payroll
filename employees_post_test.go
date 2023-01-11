@@ -6,9 +6,9 @@ import (
 	"testing"
 )
 
-func TestSubaccountGetAll(t *testing.T) {
-	req := client.NewSubaccountGetAll()
-	resp, err := req.Do()
+func TestEmployeesPost(t *testing.T) {
+	req := client.NewEmployeesPost()
+	resp, err := req.DoCSV()
 	if err != nil {
 		t.Error(err)
 	}

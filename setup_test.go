@@ -1,6 +1,7 @@
 package vismanet_test
 
 import (
+	"context"
 	"log"
 	"net/url"
 	"os"
@@ -15,15 +16,29 @@ var (
 
 func TestMain(m *testing.M) {
 	baseURLString := os.Getenv("BASE_URL")
-	accessToken := os.Getenv("ACCESS_TOKEN")
-	companyID := os.Getenv("COMPANY_ID")
-	applicationType := os.Getenv("APPLICATION_TYPE")
+	clientID := os.Getenv("CLIENT_ID")
+	clientSecret := os.Getenv("CLIENT_SECRET")
+	tenantID := os.Getenv("TENANT_ID")
+	tokenURL := os.Getenv("TOKEN_URL")
 	debug := os.Getenv("DEBUG")
 
-	client = vismanet.NewClient(nil, accessToken, companyID, applicationType)
+	oauthConfig := vismanet.NewOauth2Config(tenantID)
+	oauthConfig.ClientID = clientID
+	oauthConfig.ClientSecret = clientSecret
+
+	// set alternative token url
+	if tokenURL != "" {
+		oauthConfig.TokenURL = tokenURL
+	}
+
+	// get http client with automatic oauth logic
+	httpClient := oauthConfig.Client(context.Background())
+
+	client = vismanet.NewClient(httpClient)
 	if debug != "" {
 		client.SetDebug(true)
 	}
+
 	if baseURLString != "" {
 		baseURL, err := url.Parse(baseURLString)
 		if err != nil {
