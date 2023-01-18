@@ -3,8 +3,11 @@ package vismanet
 import (
 	"net/http"
 	"net/url"
+	"time"
 
+	"github.com/gocarina/gocsv"
 	"github.com/omniboost/go-visma.net-hrm-payroll/utils"
+	"github.com/pkg/errors"
 )
 
 func (c *Client) NewContractsPost() ContractsPost {
@@ -129,4 +132,44 @@ func (r *ContractsPost) Do() (ContractsPostResponseBody, error) {
 	responseBody := r.NewResponseBody()
 	_, err = r.client.Do(req, responseBody)
 	return *responseBody, err
+}
+
+func (r *ContractsPost) DoCSV() (Contracts, error) {
+	contracts := Contracts{}
+	postresp, err := r.Do()
+	if err != nil {
+		return contracts, errors.WithStack(err)
+	}
+
+	waiting := true
+	gresp := ContractsGetResponseBody{}
+	i := 0
+	for waiting == true {
+		i = i + 1
+		greq := r.client.NewContractsGet()
+		greq.PathParams().JobID = postresp.JobID
+		gresp, err = greq.Do()
+		if err != nil {
+			return contracts, errors.WithStack(err)
+		}
+
+		waiting = gresp.Status == "InProgress"
+		time.Sleep(time.Duration(i) * time.Second)
+	}
+
+	for _, u := range gresp.ContractFileUris {
+		r, err := http.Get(u)
+		if err != nil {
+			return contracts, errors.WithStack(err)
+		}
+
+		ee := Contracts{}
+		err = gocsv.Unmarshal(r.Body, &ee)
+		if err != nil {
+			return contracts, errors.WithStack(err)
+		}
+		contracts = append(contracts, ee...)
+	}
+
+	return contracts, nil
 }
