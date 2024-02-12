@@ -175,3 +175,29 @@ type Contract struct {
 	ManagerUserID            string  `csv:"manageruserid"`
 	ManagerName              string  `csv:"managername"`
 }
+
+type OrganizationUnits []OrganizationUnit
+
+type OrganizationUnit struct {
+	ODPOrgID             string `csv:"odporgid"`
+	PublicID             string `csv:"publicid"`
+	OrgUnitID            string `csv:"orgunitid"`
+	OrgUnitParentID      string `csv:"orgunitparentid"`
+	OrgUnitType          string `csv:"orgunittype"`
+	OrgReportType        string `csv:"orgreporttype"`
+	Manager              string `csv:"manager"`
+	ManagerUserID        string `csv:"manageruserid"`
+	CostCenter           string `csv:"costcenter"`
+	CostcenterName_en    string `csv:"costcentername_en"`
+	CostcenterName       string `csv:"costcentername"`
+	OrgDescription_en    string `csv:"orgdescription_en"`
+	OrgDescription       string `csv:"orgdescription"`
+	OrgName_en           string `csv:"orgname_en"`
+	OrgName              string `csv:"orgname"`
+	ExtDepartmentID      string `csv:"extdepartmentid"`
+	ExtDepartmentName_en string `csv:"extdepartmentname_en"`
+	ExtDepartmentName    string `csv:"extdepartmentname"`
+	ExistenceStartUTC    string `csv:"existencestartutc"`
+	StartDate            string `csv:"startdate"`
+	EndDate              string `csv:"enddate"`
+}

@@ -7,15 +7,16 @@ import (
 	"testing"
 )
 
-func TestCostCentersGet(t *testing.T) {
-	req := client.NewCostCentersGet()
-	req.PathParams().JobID = "7882910c-5a7a-4d46-8dde-c6343fee9782"
+func TestOrganixationUnitsGet(t *testing.T) {
+	req := client.NewOrganixationUnitsGet()
+	req.PathParams().JobID = "658d5090-6529-418f-af30-6a8699f56ac8"
 	resp, err := req.Do()
 	if err != nil {
 		t.Error(err)
 	}
 
-	log.Println(resp.CostCentersFileUris[0])
+	log.Println(resp.OrganizationUnitsFileUris[0])
 	b, _ := json.MarshalIndent(resp, "", "  ")
 	fmt.Println(string(b))
 }
+
